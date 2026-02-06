@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# MyPy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models (trained models can be large)
+models/*.joblib
+models/*.pkl
+models/*.onnx
+!models/.gitkeep
+
+# Monitoring data
+monitoring/grafana/data/
+monitoring/prometheus/data/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/

@@ -308,3 +308,10 @@ docs/
 ## License
 
 [MIT](LICENSE)
+
+
+## Related Projects
+
+- [modern-rag-pipeline](https://github.com/jstilb/modern-rag-pipeline) — Production RAG pipeline with hybrid search
+- [agent-orchestrator](https://github.com/jstilb/agent-orchestrator) — Multi-agent orchestration with LangGraph
+- [llm-eval-framework](https://github.com/jstilb/llm-eval-framework) — LLM evaluation and testing framework

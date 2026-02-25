@@ -305,6 +305,15 @@ docs/
 | KS test for drift | Non-parametric, no distribution assumptions | Architecture doc |
 | Shadow before promote | Validate in production without risk | Architecture doc |
 
+## Related Projects
+
+This project is part of a broader AI engineering portfolio:
+
+- [modern-rag-pipeline](https://github.com/jstilb/modern-rag-pipeline) — Hybrid RAG pipeline that can be served via this MLOps infrastructure
+- [meaningful_metrics](https://github.com/jstilb/meaningful_metrics) — Evaluation framework for measuring model performance and drift
+- [agent-orchestrator](https://github.com/jstilb/agent-orchestrator) — Multi-agent coordination framework for AI workflow management
+- [ai-assistant](https://github.com/jstilb/ai-assistant) — Production AI agent framework demonstrating autonomous operations
+
 ## License
 
 [MIT](LICENSE)

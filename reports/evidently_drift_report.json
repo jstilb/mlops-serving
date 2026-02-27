@@ -1,0 +1,57 @@
+{
+  "dataset": "wine-quality-features",
+  "reference_n": 500,
+  "current_n": 200,
+  "features": {
+    "feature_0": {
+      "drift_score": 0.166,
+      "p_value": 0.000678,
+      "drift_detected": true,
+      "stattest_name": "ks",
+      "reference_mean": 12.9934,
+      "current_mean": 13.1493,
+      "mean_shift": 0.1559
+    },
+    "feature_1": {
+      "drift_score": 0.065,
+      "p_value": 0.564235,
+      "drift_detected": false,
+      "stattest_name": "ks",
+      "reference_mean": 1.4866,
+      "current_mean": 1.5065,
+      "mean_shift": 0.0199
+    },
+    "feature_2": {
+      "drift_score": 0.718,
+      "p_value": 0.0,
+      "drift_detected": true,
+      "stattest_name": "ks",
+      "reference_mean": 2.2992,
+      "current_mean": 2.8243,
+      "mean_shift": 0.525
+    },
+    "feature_3": {
+      "drift_score": 0.507,
+      "p_value": 0.0,
+      "drift_detected": true,
+      "stattest_name": "ks",
+      "reference_mean": 14.6823,
+      "current_mean": 18.0307,
+      "mean_shift": 3.3484
+    },
+    "feature_4": {
+      "drift_score": 0.066,
+      "p_value": 0.544648,
+      "drift_detected": false,
+      "stattest_name": "ks",
+      "reference_mean": 109.989,
+      "current_mean": 110.5749,
+      "mean_shift": 0.586
+    }
+  },
+  "summary": {
+    "n_features": 5,
+    "n_drifted": 3,
+    "drift_share": 0.6
+  }
+}

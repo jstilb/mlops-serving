@@ -313,3 +313,114 @@ This project is part of a broader AI engineering portfolio:
 - [meaningful_metrics](https://github.com/jstilb/meaningful_metrics) — Evaluation framework for measuring model performance and drift
 - [agent-orchestrator](https://github.com/jstilb/agent-orchestrator) — Multi-agent coordination framework for AI workflow management
 - [ai-assistant](https://github.com/jstilb/ai-assistant) — Production AI agent framework demonstrating autonomous operations
+
+## Monitoring Dashboards
+
+The Grafana monitoring stack provides real-time visibility into model serving health:
+
+### Latency Dashboard
+
+![Grafana Latency Dashboard](assets/grafana_latency_dashboard.png)
+
+*P95 prediction latency, throughput (req/s), and per-percentile breakdown. Includes SLA threshold line at 10ms.*
+
+### Error Rate & Model Health Dashboard
+
+![Grafana Error Rate Dashboard](assets/grafana_error_rate_dashboard.png)
+
+*Error rate trending, feature drift KS statistics, A/B traffic split, and cumulative prediction count.*
+
+## System Architecture
+
+![Architecture Diagram](assets/architecture_diagram.png)
+
+**Request Flow:** Client → Load Balancer → FastAPI App → A/B Test Manager → Model Cache → Drift Detector → Response
+
+The monitoring stack (Prometheus + Grafana) collects metrics at every layer via the metrics middleware.
+
+## A/B Test Results
+
+The `src/analysis/ab_test_analysis.py` module computes statistical significance between model variants:
+
+```bash
+python -m src.analysis.ab_test_analysis --control-version v1.0 --treatment-version v2.0
+```
+
+Statistical tests used:
+- **Mann-Whitney U** (non-parametric, appropriate for latency distributions)
+- **Welch's t-test** (parametric comparison)
+- **Cohen's d** effect size with interpretation (negligible/small/medium/large)
+- **95% Bootstrap CI** for difference in means
+
+## Evidently AI Drift Detection
+
+Monitor data drift between training and production distributions:
+
+```bash
+python -m src.monitoring.evidently_drift --output-dir reports/
+```
+
+Generates:
+- `reports/evidently_drift_report.html` — Visual drift dashboard
+- `reports/evidently_drift_report.json` — Machine-readable drift scores
+
+Install Evidently for full reports:
+```bash
+pip install evidently
+```
+
+## LLM Serving Extension
+
+This infrastructure extends naturally to LLM serving — the same FastAPI + Prometheus + Grafana stack works for both ML models and LLMs.
+
+### Ollama (Local Development)
+
+```bash
+# Install and start Ollama
+brew install ollama
+ollama pull llama2
+ollama serve
+
+# Run with LLM extension
+docker compose -f docker-compose.yml -f ollama-compose.yml up
+
+# Test the LLM endpoint
+python -m src.serving.llm_server --backend ollama --model llama2 \
+  --test-prompt "Explain drift detection in ML serving."
+
+# Or via REST API
+curl -X POST http://localhost:8000/api/v1/llm/generate \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "What is feature drift?", "max_tokens": 200}'
+```
+
+### vLLM (Production, GPU Required)
+
+```bash
+pip install vllm
+python -m src.serving.llm_server --backend vllm \
+  --model mistralai/Mistral-7B-Instruct-v0.2 \
+  --test-prompt "Explain model drift detection."
+```
+
+### Supported Models
+
+| Backend | Models | Hardware |
+|---------|--------|----------|
+| Ollama | llama2, mistral, codellama, phi, gemma, mixtral | CPU/GPU |
+| vLLM | Any HuggingFace LLM | GPU (CUDA) |
+
+## Bridge to AI Engineer Work
+
+This project demonstrates the full production ML serving layer — and shows exactly how it extends to LLM serving:
+
+| ML Serving Concept | LLM Equivalent |
+|-------------------|----------------|
+| Model versioning (v1.0, v2.0) | Fine-tuned model checkpoints |
+| A/B test traffic splitting | LLM prompt A/B testing |
+| Drift detection (KS test) | LLM output distribution monitoring |
+| Prometheus latency metrics | LLM token generation latency |
+| Docker Compose one-command deploy | vLLM/Ollama one-command serve |
+| FastAPI prediction endpoint | LLM chat completion endpoint |
+
+The `src/serving/llm_server.py` module shows how to add LLM serving to any existing ML serving infrastructure without rebuilding from scratch — a critical skill for AI Engineering roles.

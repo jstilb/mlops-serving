@@ -1,0 +1,58 @@
+# Ollama LLM Serving — Docker Compose Extension
+# ISC-2268: LLM serving config for mlops-serving
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f ollama-compose.yml up
+#
+# This extends the base mlops-serving stack with local LLM serving via Ollama.
+# After startup, pull a model:
+#   docker exec mlops-ollama ollama pull llama2
+#   docker exec mlops-ollama ollama pull mistral
+
+version: "3.8"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: mlops-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 8G
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # API service gets LLM endpoint via llm_server.py
+  api:
+    environment:
+      - LLM_BACKEND=ollama
+      - LLM_MODEL=llama2
+      - OLLAMA_HOST=ollama
+      - OLLAMA_PORT=11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+volumes:
+  ollama-models:
+    driver: local
+
+# Note: Uses the monitoring network from docker-compose.yml base
